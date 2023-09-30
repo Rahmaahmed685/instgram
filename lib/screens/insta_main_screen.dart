@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instgram/screens/add_post.dart';
 import 'package:instgram/screens/insta_home_screen.dart';
 
 class InstaMainScreen extends StatefulWidget {
@@ -15,14 +16,14 @@ class _InstaMainScreenState extends State<InstaMainScreen> {
   final titles = [
     "Instagram",
     "search",
-    "Add",
+    "New Post",
     "Reels",
     "Proffile"
   ];
   final screens = [
     InstaHomeScreen(),
     SizedBox(),
-    SizedBox(),
+    AddPostScreen(),
     SizedBox(),
     SizedBox(),
   ];
@@ -30,43 +31,6 @@ class _InstaMainScreenState extends State<InstaMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-          unselectedItemColor:Colors.black ,
-          currentIndex: currentIndex,
-          onTap: (value){
-          currentIndex = value;
-          setState(() {
-
-          });
-          },
-
-          items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home_filled,color: Colors.black,),
-          label: "",
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.search,color: Colors.black,),
-          label: "",
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(
-            AssetImage("lib/images/9364306.png",),
-            color: Colors.black,
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(
-            AssetImage("lib/images/movie.png"),
-            color: Colors.black,
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.person,
-          color: Colors.black,),
-          label: "",
-        ),
-      ]),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -86,7 +50,44 @@ class _InstaMainScreenState extends State<InstaMainScreen> {
             ),
           ),
         ],
+
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.black,
+          unselectedItemColor:Colors.black ,
+          currentIndex: currentIndex,
+          onTap: (value){
+          currentIndex = value;
+          setState(() {
+          });
+          },
+          items: [
+        BottomNavigationBarItem(icon: Icon(Icons.home_filled,color: Colors.black,),
+          label: "",
+        ),
+        BottomNavigationBarItem(icon: Icon(Icons.search,color: Colors.black,),
+          label: "",
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("lib/images/pluss.png",),
+            color: Colors.black,
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("lib/images/movie.png"),
+            color: Colors.black,
+          ),
+          label: '',
+        ),
+        BottomNavigationBarItem(icon: Icon(Icons.person,
+          color: Colors.black,),
+          label: "",
+        ),
+      ]),
+
       body: screens[currentIndex],
     );
   }

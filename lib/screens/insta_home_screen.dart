@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instgram/models/posts.dart';
+import 'package:instgram/screens/add_post.dart';
+import 'package:instgram/screens/add_story.dart';
+import 'package:instgram/models/stories.dart';
 import 'package:instgram/story_model.dart';
 
 class InstaHomeScreen extends StatefulWidget {
@@ -11,98 +15,101 @@ class InstaHomeScreen extends StatefulWidget {
 
 class _InstaHomeScreenState extends State<InstaHomeScreen> {
   int currentIndex = 0;
-  final titles = ["Instagram", "search", "Add", "Reels", "Profile"];
+  dynamic titles = ["Instagram", "search", "Add", "Reels", "Profile"];
+
+  List <Stories> myStory = [
+    Stories(
+        "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
+        "Rahma"
+    ),
+  ];
+  List<Posts> myPosts = [
+    Posts('https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg',
+        'rahoma',
+        'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg',
+        '30 August', '345'),
+  ];
+  bool isFavorited = false;
+  bool isBooked = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          SizedBox(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                yourStoryWidget(),
-               storyModel(image: 'lib/images/image6.jpg', text: "title1"),
-                storyModel(image: 'lib/images/image5.jpg', text: "title1"),
-                storyModel(
-                    image: 'lib/images/tree-838667_640.jpg', text: 'story1'),
-                storyModel(image: 'lib/images/image2.jpg', text: 'story2'),
-                storyModel(image: 'lib/images/image8.webp', text: 'story3'),
-                storyModel(image: 'lib/images/image4.jpg', text: 'story4'),
-                storyModel(
-                    image: 'lib/images/image5.jpg',
-                    text: 'story5'),
-                storyModel(image: 'lib/images/image6.jpg', text: 'story6'),
-                storyModel(image: 'lib/images/image7.jpg', text: 'story7'),
-                storyModel(image: 'lib/images/image8.webp', text: 'story8'),
-              ],
-            ),
-          ),
+        backgroundColor: Colors.white,
+        floatingActionButton: FloatingActionButton(
+            onPressed: () =>
+                openAddPostScreen(),
 
-            Expanded(
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: [
-                  postsModel(
-                      profImage: 'lib/images/image4.jpg',
-                      title: "Reem Sherif",
-                      postImage: 'lib/images/mountains-736886_1280.jpg',
-                      date: '10 hour ago ',
-                      number: 450
-                  ),
-                  postsModel(
-                      profImage: 'lib/images/image5.jpg',
-                      title: "Reham Taha",
-                      postImage:'lib/images/image1.jpg',
-                      date: '11 hour ago ',
-                      number: 365
-                  ),
-                  postsModel(
-                      profImage: 'lib/images/image2.jpg',
-                      title: "Adam Ali",
-                      postImage: 'lib/images/image8.webp',
-                      date: '17 hour ago ',
-                      number: 459
-                  ),
-                  postsModel(
-                      profImage: 'lib/images/image7.jpg',
-                      title: "Hossam Ahmed",
-                      postImage: 'lib/images/Snow night.jpg',
-                      date: '3 March ',
-                      number: 760
+          child: Icon(Icons.add),
+        ),
+        body:
+        Column(children: [
+          buildStoryItem(),
+          postsItem(),
 
-                  ),
-                  postsModel(
-                      profImage: 'lib/images/image2.jpg',
-                      title: "Hager Salah",
-                      postImage: 'lib/images/image5.jpg',
-                      date: '14 Septemper ',
-                      number: 345
-                  ),
-                  postsModel(
-                      profImage: 'lib/images/image7.jpg',
-                      title: "Gehad Nabil",
-                      postImage: 'lib/images/pexels-vh-s-2377965.jpg',
-                      date: '30 July ',
-                      number: 123
-                  ),
-                  postsModel(
-                      profImage: 'lib/images/image6.jpg',
-                      title: "Sara Mohamed",
-                      postImage: 'lib/images/sea-164989_640.jpg',
-                      date: '29 August ',
-                      number: 205
-                  ),
-                ],
-              ),
-            ),
-
-          ]),
+        ],
+        )
     );
   }
+
+  Widget buildStoryItem() {
+    return SizedBox(
+        height: 100,
+        child:
+        ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: myStory.length,
+            itemBuilder: (context, index) {
+              return index == 0
+                  ? yourStoryWidget()
+                  :
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: const BoxDecoration(
+                                gradient: LinearGradient(colors: [
+                                  Colors.green,
+                                  Colors.yellow,
+                                  Colors.red,
+                                  Colors.purple
+                                ]),
+                                shape: BoxShape.circle),
+                            child: Padding(
+                              //this padding will be you border size
+                              padding: EdgeInsets.all(3.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle),
+                              ),
+
+                            ),
+                          ),
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundColor: Colors.white,
+                            foregroundImage: NetworkImage(myStory[index].image),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(myStory[index].name),
+
+
+                    ]),
+              );
+            }
+        )
+    );
+  }
+
   Widget yourStoryWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -111,23 +118,27 @@ class _InstaHomeScreenState extends State<InstaHomeScreen> {
           Stack(
             alignment: AlignmentDirectional.bottomEnd,
             children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundImage: AssetImage('lib/images/proffile.jpg'),
+              GestureDetector(
+                onTap: () => openAddStory(),
+                // Image tapped
+                child: CircleAvatar(
+                  radius: 28,
+                  backgroundImage: AssetImage('lib/images/proffile.jpg'),
+                ),
               ),
-              const CircleAvatar(
+
+              CircleAvatar(
                 radius: 10,
                 backgroundColor: Colors.white,
               ),
-              const CircleAvatar(
-                radius: 9,
-                backgroundColor: Colors.blue,
-                child: Icon(
-                  Icons.add,
-                  size: 16,
-                  color: Colors.white,
-                ),
+              CircleAvatar(
+                  radius: 9,
+                  backgroundColor: Colors.blue,
+                  child: Icon(Icons.add,
+                    size: 16,
+                    color: Colors.white,)
               ),
+
             ],
           ),
           const SizedBox(height: 5),
@@ -136,332 +147,176 @@ class _InstaHomeScreenState extends State<InstaHomeScreen> {
       ),
     );
   }
-  Widget postsModel ({
-    required String profImage ,
-    required String title,
-    required String postImage,
-    required String date,
-    required int number
-  }) {
-    return Expanded(
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
-              child: Row(children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(profImage),
-                ),
-                const SizedBox(width: 5),
-                Expanded(
-                  child: Text(title,
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
-              ]),
-            ),
-            SizedBox(height: 3,),
-            Image.asset(
-              postImage,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.fitWidth,
-            ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon:  Icon(Icons.favorite_border_rounded),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: ImageIcon(
-                    AssetImage(
-                      "lib/images/comment.png",
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: ImageIcon(
-                    AssetImage(
-                      "lib/images/share.png",
-                    ),
-                  ),
-                ),
-                Spacer(),
-                IconButton(
-                    onPressed: () {}, icon: Icon(Icons.bookmark_border)),
-              ],
-            ),
-            Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                        CircleAvatar(
-                        radius: 10,
-                        backgroundImage: AssetImage(
-                            'lib/images/mountain-landscape-2031539_640.jpg'),
-                      ),
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundImage:
-                      AssetImage('lib/images/mountains-736886_1280.jpg'),
-                    ),
-                    CircleAvatar(
-                      radius: 10,
-                      backgroundImage:
-                      AssetImage('lib/images/night-3078326_640.jpg'),
-                    ),
 
-                    SizedBox(width: 10),
-                    RichText(
-                      text: TextSpan(
-                        text: 'Liked by ',
-                        style: DefaultTextStyle.of(context).style,
-                        children:  <TextSpan>[
-                          TextSpan(
-                              text: 'Rahma Ahmed',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(text: ' and '),
-                          TextSpan(
-                              text: 'Others',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+  Widget postsItem() {
+    return  Expanded(
+      child: ListView.builder(
+              itemCount: myPosts.length,
+              itemBuilder: (context, index) {
+               return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 5, right: 5, top: 10),
+                        child: Row(children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                myPosts[index].profImage),
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: Text(myPosts[index].name,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {}, icon: Icon(Icons.more_vert)),
+                        ]),
+                      ),
+                      SizedBox(height: 3,),
+                      Image.network(
+                        myPosts[index].postImage,
+                        height: 250,
+                        width: double.infinity,
+                        fit: BoxFit.fill,
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              setState(() => isFavorited = !isFavorited);
+                            },
+                            icon: isFavorited
+                                ? Icon(Icons.favorite,color: Colors.red,)
+                                : Icon(Icons.favorite_border),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: ImageIcon(
+                              AssetImage(
+                                "lib/images/comment.png",
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: ImageIcon(
+                              AssetImage(
+                                "lib/images/share.png",
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                              onPressed: () {
+                                setState(() => isBooked = !isBooked);
+                              },
+                              icon: isBooked?
+                            Icon(Icons.bookmark):
+                                  Icon(Icons.bookmark_border)
+                          ),
                         ],
                       ),
-                    )
-                  ],
-                )),
-            Padding(
-              padding: const EdgeInsets.only(left: 10,top: 5),
-              child: Text("View all $number comments"),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-               child: RichText(
-                  text: TextSpan(
-                    text: date,
-                    style: DefaultTextStyle.of(context).style,
-                    children:  <TextSpan>[
-                      TextSpan(
-                          text: '. see translation',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 10,
+                                backgroundImage: AssetImage(
+                                    'lib/images/mountain-landscape-2031539_640.jpg'),
+                              ),
+                              CircleAvatar(
+                                radius: 10,
+                                backgroundImage:
+                                AssetImage(
+                                    'lib/images/mountains-736886_1280.jpg'),
+                              ),
+                              CircleAvatar(
+                                radius: 10,
+                                backgroundImage:
+                                AssetImage('lib/images/night-3078326_640.jpg'),
+                              ),
+
+                              SizedBox(width: 10),
+                              RichText(
+                                text: TextSpan(
+                                  text: 'Liked by ',
+                                  style: DefaultTextStyle
+                                      .of(context)
+                                      .style,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'Rahma Ahmed',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    TextSpan(text: ' and '),
+                                    TextSpan(
+                                        text: 'Others',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              )
+                            ],
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 5),
+                        child: Text("View all ${myPosts[index].number} comments"),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: RichText(
+                            text: TextSpan(
+                              text: myPosts[index].date,
+                              style: DefaultTextStyle
+                                  .of(context)
+                                  .style,
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: ' . see translation',
+                                    style: TextStyle(fontWeight: FontWeight
+                                        .bold)),
+                              ],
+                            ),
+                          )
+                      ),
                     ],
                   ),
-                )
-            ),
-          ],
-        ),
+                );
+              }
+
+
       ),
     );
   }
 
-  Widget postView() {
-    return Expanded(
-      child: ListView.builder(
-          //scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
-                child: Row(children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage('lib/images/Snow night.jpg'),
-                  ),
-                  const SizedBox(width: 5),
-                  const Expanded(
-                    child: Text(
-                      'Rahma Ahmed',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
-                ]),
-              ),
-              Image.asset(
-                'lib/images/sunset-3325080_640.jpg',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.favorite_border_rounded),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: ImageIcon(
-                      AssetImage(
-                        "lib/images/comment.png",
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: ImageIcon(
-                      AssetImage(
-                        "lib/images/share.png",
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  IconButton(
-                      onPressed: () {}, icon: Icon(Icons.bookmark_border)),
-                ],
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 8,
-                        backgroundImage: AssetImage(
-                            'lib/images/mountain-landscape-2031539_640.jpg'),
-                      ),
-                      CircleAvatar(
-                        radius: 8,
-                        backgroundImage:
-                            AssetImage('lib/images/mountains-736886_1280.jpg'),
-                      ),
-                      CircleAvatar(
-                        radius: 8,
-                        backgroundImage:
-                            AssetImage('lib/images/night-3078326_640.jpg'),
-                      ),
-                      const SizedBox(width: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'Liked by ',
-                          style: DefaultTextStyle.of(context).style,
-                          children: const <TextSpan>[
-                            TextSpan(
-                                text: 'Rahma Ahmed',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: ' and '),
-                            TextSpan(
-                                text: 'Others',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
-            ],
-          ),
-        );
-      }),
-    );
+ void openAddStory() {
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => AddStory())
+    ).then((value) => addToStory(value),);
   }
 
-  Widget viewPost() {
-    return Expanded(
-      child: ListView.builder(
-          //scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-        return Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
-                child: Row(children: [
-                  CircleAvatar(
-                    backgroundImage:
-                        AssetImage('lib/images/mountains-736886_1280.jpg'),
-                  ),
-                  const SizedBox(width: 5),
-                  const Expanded(
-                    child: Text(
-                      'Reem Ahmed',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
-                ]),
-              ),
-              Image.asset(
-                'lib/images/sea-164989_640.jpg',
-                height: 270,
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.favorite_border_rounded),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: ImageIcon(
-                      AssetImage(
-                        "lib/images/comment.png",
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: ImageIcon(
-                      AssetImage(
-                        "lib/images/share.png",
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  IconButton(
-                      onPressed: () {}, icon: Icon(Icons.bookmark_border)),
-                ],
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 8,
-                        backgroundImage: AssetImage(
-                            'lib/images/mountain-landscape-2031539_640.jpg'),
-                      ),
-                      CircleAvatar(
-                        radius: 8,
-                        backgroundImage:
-                            AssetImage('lib/images/mountains-736886_1280.jpg'),
-                      ),
-                      CircleAvatar(
-                        radius: 8,
-                        backgroundImage:
-                            AssetImage('lib/images/night-3078326_640.jpg'),
-                      ),
-                      const SizedBox(width: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'Liked by ',
-                          style: DefaultTextStyle.of(context).style,
-                          children: const <TextSpan>[
-                            TextSpan(
-                                text: 'Rahma Ahmed',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            TextSpan(text: ' and '),
-                            TextSpan(
-                                text: 'Others',
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
-            ],
-          ),
-        );
-      }),
-    );
+ void addToStory(Stories value) {
+    myStory.add(value);
+    setState(() {
+
+    });
+  }
+
+ void openAddPostScreen() {
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => AddPostScreen())
+    ).then((value) => addNewPost(value));
+  }
+
+ void addNewPost(Posts value) {
+    myPosts.add(value);
+    setState(() {
+    });
   }
 }
