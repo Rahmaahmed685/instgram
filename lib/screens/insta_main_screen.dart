@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:instgram/screens/add_post.dart';
+import 'package:instgram/models/loading_item.dart';
 import 'package:instgram/screens/insta_home_screen.dart';
 
 class InstaMainScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class _InstaMainScreenState extends State<InstaMainScreen> {
   final screens = [
     InstaHomeScreen(),
     SizedBox(),
-    AddPostScreen(),
+    SizedBox(),
     SizedBox(),
     SizedBox(),
   ];
