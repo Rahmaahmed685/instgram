@@ -12,17 +12,16 @@ class _StoryViewScreenState extends State<StoryViewScreen> {
 
   final controller = StoryController();
 
-
+int currentIndex = 0 ;
   @override
   Widget build(BuildContext context) {
     List<StoryItem> storyItems = [
       StoryItem.text(
           title: 'Rahma Ahmed',
           backgroundColor: Colors.lightBlueAccent,
-        textStyle: TextStyle(),
       ),
       StoryItem.pageImage(
-        url: 'https://thumbs.dreamstime.com/b/blue-gerbera-flower-isolated-png-format-white-background-macro-photograph-137393818.jpg'
+        url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd4y7zVmHqMDDZPFYCAtIvlWWGYofVYEwNg4AyzbXsRg&s"
          , controller: controller,),
     ]; // your list of stories
 

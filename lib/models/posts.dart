@@ -10,6 +10,7 @@ class Posts {
    String image1;
   String image2;
   String image3;
+  bool selected= false;
 
 
   Posts(

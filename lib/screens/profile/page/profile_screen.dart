@@ -7,10 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instgram/screens/edit_profile_screen.dart';
+import 'package:instgram/screens/profile/manager/profile_cubit.dart';
 
-import '../shared_prefrances.dart';
+import '../../../shared_prefrances.dart';
+import '../../login/maneger/login_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -37,11 +40,17 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     getUserDataInLocalDataSource();
     getUserData();
   }
-
+final cubit = ProfileCubit();
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 2, vsync: this);
-    return Scaffold(
+    return
+      BlocProvider(
+          create: (context) => cubit,
+          child: BlocListener<ProfileCubit, ProfileState>(
+          listener: (context, state) {},
+    child:
+      Scaffold(
       appBar: AppBar(
         title:
         TextFormField(
@@ -66,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       ),
 
       body:
+
       ListView(
           children: [
             Row(
@@ -160,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context)=>
                                 EditProfileScreen(),
-                            ));
+                            )).then((value) => getUserData());
                       },
                       style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder()),
@@ -278,9 +288,22 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                   ]),
             ),
           ]),
+    ),
+          ),
     );
   }
+  void saveUserData() {
+    final userId = auth.currentUser!.uid;
+    final data = {
+      'name': nameController.text,
+      'username' : usernameController.text,
+    };
 
+    firestore.collection("users").doc(userId).update(data);
+    setState(() {
+    });
+    Navigator.pop(context);
+  }
   void getUserData() {
     firestore
         .collection("users")

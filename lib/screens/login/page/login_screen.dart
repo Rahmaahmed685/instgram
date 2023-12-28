@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:instgram/screens/autho/forget_password_screen.dart';
-import 'package:instgram/screens/autho/register_screen.dart';
+import 'package:instgram/screens/autho/sign_up.dart';
 import 'package:instgram/screens/autho/sign_up.dart';
 import 'package:instgram/screens/insta_main_screen.dart';
+
+import '../maneger/login_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,10 +21,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final cubit = LoginCubit();
 
   @override
   Widget build(BuildContext context) {
     return
+      BlocProvider(
+          create: (context) => cubit,
+          child: BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+      if(state is LoginSuccessState){
+        onLogginSuccess();
+      }else if (state is LoginFailureState){
+        Fluttertoast.showToast(msg: state.errorMessage);
+      }
+    },
+    child:
         Scaffold(
             appBar:  AppBar(title: Text(""),),
             body: Form(
@@ -78,8 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator:  (value){
                         if(value!.isEmpty){
                           return 'Enter Your password';
-                        }if(value.length < 8){
-                          return "Password must be at least 8 characters";
+                        }if(value.length < 6){
+                          return "Password must be at least 6 characters";
                         }
                         return null;
                       },
@@ -90,12 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child:
                         ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(
-                                      builder:
-                                          (context) => InstaMainScreen()));
-                            },
+                            onPressed: () => login(),
                             child: Text('Log In',style: TextStyle(color: Colors.white54),),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.cyan[200],
@@ -159,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(fontWeight: FontWeight.w500,
                         fontSize: 13),),),
                   ),
-                 SizedBox(height: 200),
+                 SizedBox(height: 150),
 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -184,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: () {
                               Navigator.push(  context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignUp()), );
+                                    builder: (context) => RegisterScreen()), );
                             },
                             child: Text(
                               ' Sign Up',
@@ -200,7 +210,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 ],),
             )
-        );
+        ),
+    ),
+      );
     }
   void login() {
     if (!formKey.currentState!.validate()) {

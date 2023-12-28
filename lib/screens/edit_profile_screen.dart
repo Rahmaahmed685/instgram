@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -10,21 +11,20 @@ import 'package:image_picker/image_picker.dart';
 
 import '../shared_prefrances.dart';
 
-
-
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _EditProfileScreenState extends State<EditProfileScreen> {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
+  final bioController = TextEditingController();
 
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
@@ -47,20 +47,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     phoneController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    usernameController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextFormField(
-          enabled: false,
-          controller: emailController,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.lock_outline),
-          ),
-        ),
+        title: Text("Edit Profile",style: TextStyle(fontWeight: FontWeight.w500),)
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -132,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 15),
             TextFormField(
-              //controller: usernameController,
+              controller: bioController,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(
@@ -157,8 +151,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => saveUserData(),
-                style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
+                onPressed: () {
+                  saveUserData();
+               },
+                style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder()),
                 child: const Text("Update"),
               ),
             ),
@@ -170,20 +167,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void saveUserData() {
     final userId = auth.currentUser!.uid;
-
     final data = {
       'name': nameController.text,
       'phone': phoneController.text,
+      'username' : usernameController.text,
+      'bio': bioController.text,
     };
 
-    firestore.collection("name").doc(userId).update(data);
+    firestore.collection("users").doc(userId).update(data);
+    setState(() {
+    });
     Navigator.pop(context);
-
   }
 
   void getUserData() {
     firestore
-        .collection("name")
+        .collection("users")
         .doc(auth.currentUser!.uid)
         .get()
         .then((value) {
@@ -192,12 +191,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }).catchError((error) {});
   }
 
-  void saveUserDataInLocalDataSource (Map<String, dynamic> data) async {
+  void saveUserDataInLocalDataSource(Map<String, dynamic> data) async {
     final json = jsonEncode(data);
     PreferenceUtils.setString(PreferenceKey.ProfileData, json);
   }
-  void getUserDataInLocalDataSource () async {
 
+  void getUserDataInLocalDataSource() async {
     final json = PreferenceUtils.getString(PreferenceKey.ProfileData);
     final userData = jsonDecode(json ?? '');
     updateUi(userData);
@@ -208,7 +207,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     nameController.text = data['name'];
     phoneController.text = data['phone'];
     emailController.text = data['email'];
-
+    usernameController.text = data['username'];
+    bioController.text = data['bio'];
     imageUrl = data['imageUrl'];
     setState(() {});
   }
@@ -263,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void saveImageUrl(String imageUrl) {
     final userId = auth.currentUser!.uid;
 
-    firestore.collection("name").doc(userId).update({
+    firestore.collection("users").doc(userId).update({
       'imageUrl': imageUrl,
     });
   }
